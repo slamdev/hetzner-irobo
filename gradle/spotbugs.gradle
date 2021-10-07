@@ -1,0 +1,19 @@
+plugins.withId('com.github.spotbugs') {
+    spotbugs {
+        toolVersion = '4.2.2'
+        ignoreFailures = false
+        effort = 'max'
+        reportLevel = 'low'
+    }
+    afterEvaluate {
+        tasks.each { task ->
+            if (task.class.toString().toLowerCase().contains('spotbugs')) {
+                task.excludeFilter = file('gradle/spotbugs.xml')
+                task.reports {
+                    xml.enabled = false
+                    html.enabled = true
+                }
+            }
+        }
+    }
+}

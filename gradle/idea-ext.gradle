@@ -1,0 +1,12 @@
+plugins.withId('org.jetbrains.gradle.plugin.idea-ext') {
+    idea {
+        project {
+            settings {
+                delegateActions {
+                    delegateBuildRunToGradle = false
+                    testRunner = 'PLATFORM'
+                }
+            }
+        }
+    }
+}

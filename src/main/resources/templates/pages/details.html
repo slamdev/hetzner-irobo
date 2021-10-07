@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+<head>
+    <title>Details</title>
+</head>
+<body>
+<!--/*@thymesVar id="json" type="java.lang.String"*/-->
+<div layout:fragment="content">
+    <div class="bg-light p-5 rounded">
+        <h1>Details</h1>
+        <pre><code th:text="${json}"></code></pre>
+    </div>
+</div>
+</body>
+</html>

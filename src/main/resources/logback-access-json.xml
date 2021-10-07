@@ -1,0 +1,36 @@
+<configuration>
+    <conversionRule conversionWord="sleuth"
+                    converterClass="com.github.slamdev.hetzner.irobo.integration.AccessLogSleuthConverter"/>
+    <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.AccessEventCompositeJsonEncoder">
+            <providers>
+                <timestamp/>
+                <version/>
+                <pattern>
+                    <pattern>
+                        {
+                        "method":"%m",
+                        "protocol":"%H",
+                        "status_code":"#asLong{%s}",
+                        "requested_url":"%r",
+                        "requested_uri":"%U",
+                        "remote_host":"%h",
+                        "content_length":"#asLong{%b}",
+                        "elapsed_time":"#asLong{%D}",
+                        "level":"ACCESS",
+                        "traceId": "%sleuth{traceId}",
+                        "spanId": "%sleuth{spanId}",
+                        "request_headers": {
+                        "accept": "%i{accept}",
+                        "cookie": "%i{cookie}",
+                        "host": "%i{host}",
+                        "user_agent": "%i{user-agent}"
+                        }
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+    <appender-ref ref="JSON"/>
+</configuration>

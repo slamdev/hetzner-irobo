@@ -1,0 +1,99 @@
+spring:
+  application:
+    name: hetzner-irobo
+  datasource:
+    url: jdbc:postgresql://localhost:26257/irobo
+    username: root
+    password:
+  jpa:
+    open-in-view: false
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:db/seed-data.sql
+  main:
+    banner-mode: off
+  zipkin:
+    enabled: false
+  sleuth:
+    sampler:
+      probability: 1
+  cloud:
+    discovery:
+      enabled: false
+  lifecycle:
+    timeout-per-shutdown-phase: 1m
+server:
+  error:
+    include-stacktrace: always
+  shutdown: graceful
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false
+management:
+  server:
+    port: 8081
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+zabbix:
+  api:
+    url:
+hetzner-irobo:
+  robot:
+    webUrl: https://robot.your-server.de
+    url: https://robot-ws.your-server.de
+    username:
+    password:
+  zabbix:
+    url: ${zabbix.api.url}
+    username:
+    password:
+  logs:
+    appender: CONSOLE
+    access:
+      enabled: true
+      config-file: logback-access.xml
+  update-interval:
+    hetzner-servers-list: 1h
+    zabbix-hosts-list: 10m
+    server-search: 5m
+logging:
+  level:
+    'com.github.slamdev.hetzner.irobo': DEBUG
+    'org.springframework.jdbc.core.JdbcTemplate': DEBUG
+    'org.springframework.data.convert.CustomConversions': ERROR
+---
+spring:
+  config.activate.on-profile: cloud
+  datasource:
+    url: jdbc:postgresql://cockroachdb:26257/irobo
+    username: root
+    password:
+hetzner-irobo:
+  logs:
+    appender: JSON
+    access:
+      config-file: logback-access-json.xml
+---
+spring:
+  config.activate.on-profile: prod
+  sql:
+    init:
+      mode: never
+server:
+  error:
+    include-stacktrace: never
+logging:
+  level:
+    'org.springframework.jdbc.core.JdbcTemplate': INFO
+    'com.github.slamdev.hetzner.irobo': INFO

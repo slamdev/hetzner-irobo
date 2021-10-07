@@ -1,0 +1,12 @@
+plugins.withId('pmd') {
+    pmd {
+        toolVersion = '6.33.0'
+        ignoreFailures = false
+        consoleOutput = false
+    }
+    tasks.withType(Pmd) {
+        source = 'src/main/java'
+        ruleSetFiles = files('gradle/pmd.xml')
+        ruleSets = []
+    }
+}

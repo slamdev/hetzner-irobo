@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  cockroachdb:
+    image: cockroachdb/cockroach:v21.1.9
+    command:
+      - start-single-node
+      - --insecure
+    ports:
+      - "26257:26257"
+      - "8181:8080"
+    volumes:
+      - ./build/docker-volumes/cockroachdb:/cockroach/cockroach-data
+  create-db:
+    image: jbergknoff/postgresql-client
+    command:
+      - --host=cockroachdb
+      - --port=26257
+      - --username=root
+      - --dbname=postgres
+      - --command=CREATE DATABASE IF NOT EXISTS irobo
+    depends_on:
+      - cockroachdb
+  irobo:
+    image: slamdev/hetzner-irobo
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    profiles: [ "complete" ]
+    depends_on:
+      - create-db
+    environment:
+      - HETZNER_IROBO_ROBOT_USERNAME
+      - HETZNER_IROBO_ROBOT_PASSWORD
+      - HETZNER_IROBO_ZABBIX_USERNAME
+      - HETZNER_IROBO_ZABBIX_PASSWORD
+      - ZABBIX_API_URL
+      - SPRING_PROFILES_ACTIVE=cloud
+    deploy:
+      restart_policy:
+        condition: on-failure

@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+<head>
+    <title th:text="${status + ' error'}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 th:text="${status + ' error'}"></h1>
+    <p class="lead" th:text="${error}"></p>
+    <pre th:if="${@environment.getProperty('server.error.include-stacktrace') == 'always'}" th:text="${trace}"></pre>
+</div>
+</body>
+</html>

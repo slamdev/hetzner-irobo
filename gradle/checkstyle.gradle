@@ -1,0 +1,15 @@
+plugins.withId('checkstyle') {
+    checkstyle {
+        toolVersion = '8.41.1'
+        ignoreFailures = false
+        showViolations = false
+    }
+    tasks.withType(Checkstyle) {
+        source = 'src/main/java'
+        configFile = file('gradle/checkstyle.xml')
+    }
+    dependencies {
+        checkstyle 'com.thomasjensen.checkstyle.addons:checkstyle-addons:6.0.1'
+        checkstyle 'com.github.sevntu-checkstyle:sevntu-checks:1.38.0'
+    }
+}

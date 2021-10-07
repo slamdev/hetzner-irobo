@@ -1,0 +1,10 @@
+plugins.withId('com.google.cloud.tools.jib') {
+    jib.from.image = 'adoptopenjdk/openjdk13:x86_64-alpine-jre-13.0.2_8@sha256:8c482bf0a54a0ef9bd87ed3e0c79736400321985f73407d2c593479e25b22d97'
+    jib.pluginExtensions {
+        pluginExtension {
+            implementation = 'com.google.cloud.tools.jib.gradle.extension.springboot.JibSpringBootExtension'
+        }
+    }
+    tasks.jib.dependsOn tasks.check
+    tasks.jibDockerBuild.dependsOn tasks.check
+}

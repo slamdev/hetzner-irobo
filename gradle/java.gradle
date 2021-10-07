@@ -1,0 +1,28 @@
+plugins.withId('java') {
+    compileJava {
+        options.encoding = 'UTF-8'
+        options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation' << '-Werror'
+    }
+
+    compileTestJava {
+        options.encoding = 'UTF-8'
+        options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation' << '-Werror'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.withType(AbstractArchiveTask) {
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
+    }
+
+    test {
+        testLogging.exceptionFormat = 'full'
+        useJUnitPlatform()
+    }
+
+    sourceCompatibility = JavaVersion.VERSION_13
+    targetCompatibility = JavaVersion.VERSION_13
+}

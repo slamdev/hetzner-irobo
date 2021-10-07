@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>Inventory</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="bg-light p-5 rounded" th:with="
+            currentSortDirection=${param.sortDirection == null || param.sortDirection[0] == 'ASC' ? 'ASC' : 'DESC'},
+            newSortDirection=${param.sortDirection == null || param.sortDirection[0] == 'ASC' ? 'DESC' : 'ASC'},
+            currentSortField=${param.sortField == null ? null : param.sortField[0]},
+            currentFilter=${param.filter == null ? null : param.filter[0]}
+            ">
+        <div class="d-flex flex-row">
+            <div class="col">
+                <h1>Inventory</h1>
+            </div>
+            <div class="col col-sm-2">
+                <form th:action="@{/}" method="get">
+                    <div class="input-group">
+                        <input type="hidden" name="sortField" th:value="${currentSortField}"
+                               th:if="${param.sortField != null}">
+                        <input type="hidden" name="sortDirection" th:value="${currentSortDirection}"
+                               th:if="${param.sortDirection != null}">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search"
+                               aria-describedby="search" name="filter" th:value="${currentFilter}">
+                        <button class="btn btn-outline-secondary" type="submit" id="search">
+                            <i class="bi bi-search" role="img"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">
+                    <a th:href="@{/(sortField='serverNumber',sortDirection=${newSortDirection})}" class="btn"
+                       tabindex="-1" role="button" aria-disabled="true">
+                        # <i
+                            th:class="${currentSortDirection == 'ASC' ? 'bi bi-sort-down-alt' : 'bi bi-sort-up-alt'}"
+                            role="img"
+                            th:if="${currentSortField == 'serverNumber'}"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    <a th:href="@{/(sortField='serverName',sortDirection=${newSortDirection})}" class="btn"
+                       tabindex="-1" role="button" aria-disabled="true">
+                        Server Name <i
+                            th:class="${currentSortDirection == 'ASC' ? 'bi bi-sort-down-alt' : 'bi bi-sort-up-alt'}"
+                            role="img"
+                            th:if="${currentSortField == 'serverName'}"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    <a th:href="@{/(sortField='hostName',sortDirection=${newSortDirection})}" class="btn"
+                       tabindex="-1" role="button" aria-disabled="true">
+                        Host Name <i
+                            th:class="${currentSortDirection == 'ASC' ? 'bi bi-sort-down-alt' : 'bi bi-sort-up-alt'}"
+                            role="img"
+                            th:if="${currentSortField == 'hostName'}"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    <a th:href="@{/(sortField='externalIp',sortDirection=${newSortDirection})}" class="btn"
+                       tabindex="-1"
+                       role="button" aria-disabled="true">
+                        External IP <i
+                            th:class="${currentSortDirection == 'ASC' ? 'bi bi-sort-down-alt' : 'bi bi-sort-up-alt'}"
+                            role="img"
+                            th:if="${currentSortField == 'externalIp'}"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    <a th:href="@{/(sortField='internalIp',sortDirection=${newSortDirection})}" class="btn"
+                       tabindex="-1"
+                       role="button" aria-disabled="true">
+                        Internal IP <i
+                            th:class="${currentSortDirection == 'ASC' ? 'bi bi-sort-down-alt' : 'bi bi-sort-up-alt'}"
+                            role="img"
+                            th:if="${currentSortField == 'internalIp'}"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    <a th:href="@{/(sortField='product',sortDirection=${newSortDirection})}" class="btn" tabindex="-1"
+                       role="button" aria-disabled="true">
+                        Product <i
+                            th:class="${currentSortDirection == 'ASC' ? 'bi bi-sort-down-alt' : 'bi bi-sort-up-alt'}"
+                            role="img" th:if="${currentSortField == 'product'}"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    <a th:href="@{/(sortField='dc',sortDirection=${newSortDirection})}" class="btn" tabindex="-1"
+                       role="button" aria-disabled="true">
+                        DC <i th:class="${currentSortDirection == 'ASC' ? 'bi bi-sort-down-alt' : 'bi bi-sort-up-alt'}"
+                              role="img" th:if="${currentSortField == 'dc'}"></i>
+                    </a>
+                </th>
+                <th scope="col">Controls</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="servers" type="java.util.List"*/-->
+            <tr th:each="s: ${servers}"
+                th:class="${s.zabbixUrl == null ? 'table-warning' : ''}"
+                th:title="${s.zabbixUrl == null ? 'Zabbix not detected' : ''}"
+                th:attr="data-bs-toggle=${s.zabbixUrl == null ? 'tooltip' : ''}"
+            >
+                <!--/*@thymesVar id="s" type="com.github.slamdev.hetzner.irobo.business.entity.ServerListViewModel"*/-->
+                <th scope="row" th:text="${s.serverNumber}"></th>
+                <th th:text="${s.serverName}"></th>
+                <td th:text="${s.hostName}"></td>
+                <td th:text="${s.externalIp?.hostAddress}"></td>
+                <td th:text="${s.internalIp?.hostAddress}"></td>
+                <td th:text="${s.product}"></td>
+                <td th:text="${s.dc}"></td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a th:href="@{/details(id=${s.serverNumber})}" class="btn btn-outline-info"
+                           tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="tooltip" title="Details">
+                            <i class="bi bi-card-text" role="img"></i>
+                        </a>
+                        <a th:href="@{${s.hetznerUrl}}" class="btn btn-outline-primary" target="_blank"
+                           tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="tooltip" title="Hetzner">
+                            <i class="bi bi-box" role="img"></i>
+                        </a>
+                        <a th:href="@{${s.zabbixUrl}}"
+                           th:class="${s.zabbixUrl == null ? 'btn btn-outline-secondary disabled' : 'btn btn-outline-success'}"
+                           target="_blank" tabindex="-1" role="button"
+                           aria-disabled="true" data-bs-toggle="tooltip" title="Zabbix">
+                            <i class="bi bi-server" role="img"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
