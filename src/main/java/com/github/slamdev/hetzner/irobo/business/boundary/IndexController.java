@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -71,6 +69,7 @@ public class IndexController {
                         .dc(s.getDc())
                         .hetznerUrl(buildHetznerUrl(s))
                         .zabbixUrl(buildZabbixUrl(s))
+                        .tags(s.getTags() == null ? Collections.emptyList() : Arrays.asList(s.getTags()))
                         .build())
                 .collect(Collectors.toList());
         return new ModelAndView("pages/index", Map.of("servers", servers));

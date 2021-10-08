@@ -38,6 +38,9 @@ public class AppConfig {
 
         @NotBlank
         String password;
+
+        @NotBlank
+        String sshKey;
     }
 
     @Value
@@ -62,5 +65,8 @@ public class AppConfig {
 
         @NotNull
         Duration serverSearch;
+
+        @NotNull
+        Duration serverTags;
     }
 }

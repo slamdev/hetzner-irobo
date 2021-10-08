@@ -54,6 +54,7 @@ hetzner-irobo:
     url: https://robot-ws.your-server.de
     username:
     password:
+    ssh-key:
   zabbix:
     url: ${zabbix.api.url}
     username:
@@ -67,11 +68,14 @@ hetzner-irobo:
     hetzner-servers-list: 1h
     zabbix-hosts-list: 10m
     server-search: 5m
+    server-tags: 1h
 logging:
   level:
     'com.github.slamdev.hetzner.irobo': DEBUG
     'org.springframework.jdbc.core.JdbcTemplate': DEBUG
     'org.springframework.data.convert.CustomConversions': ERROR
+    'net.schmizz.sshj': WARN
+    'com.hierynomus.sshj': WARN
 ---
 spring:
   config.activate.on-profile: cloud

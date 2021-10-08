@@ -25,5 +25,6 @@ public class UpdateHistoryModel {
         HETZNER_SERVER_LIST,
         ZABBIX_HOSTS_LIST,
         SERVER_SEARCH,
+        SERVER_TAGS,
     }
 }

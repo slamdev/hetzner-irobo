@@ -52,6 +52,8 @@ public class ServerModel {
 
     InetAddress zabbixIp;
 
+    String[] tags;
+
     @Version
     Long version;
 

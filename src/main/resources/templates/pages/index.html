@@ -97,6 +97,7 @@
                               role="img" th:if="${currentSortField == 'dc'}"></i>
                     </a>
                 </th>
+                <th scope="col">Tags</th>
                 <th scope="col">Controls</th>
             </tr>
             </thead>
@@ -115,6 +116,9 @@
                 <td th:text="${s.internalIp?.hostAddress}"></td>
                 <td th:text="${s.product}"></td>
                 <td th:text="${s.dc}"></td>
+                <td>
+                    <span class="badge bg-primary me-1" th:each="t: ${s.tags}" th:text="${t}"></span>
+                </td>
                 <td>
                     <div class="btn-group" role="group">
                         <a th:href="@{/details(id=${s.serverNumber})}" class="btn btn-outline-info"

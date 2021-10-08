@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.net.InetAddress;
+import java.util.List;
 
 @Value
 @Builder
@@ -17,4 +18,5 @@ public class ServerListViewModel {
     String dc;
     String hetznerUrl;
     String zabbixUrl;
+    List<String> tags;
 }

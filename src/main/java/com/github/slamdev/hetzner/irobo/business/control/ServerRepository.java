@@ -14,6 +14,8 @@ public interface ServerRepository extends PagingAndSortingRepository<ServerModel
     @Override
     List<ServerModel> findAll();
 
+    List<ServerModel> findAllByZabbixIpIsNotNull();
+
     @Transactional
     @Override
     void deleteAllById(Iterable ids);
