@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 13
-      - run: echo "::set-env name=RELEASE_VERSION::${GITHUB_REF##*/}"
+      - run: '"RELEASE_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV'
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: jib --image=slamdev/hetzner-irobo:$RELEASE_VERSION
+          arguments: jib --image=slamdev/hetzner-irobo:${{ env.RELEASE_VERSION }}
