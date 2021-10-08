@@ -15,5 +15,4 @@ jobs:
           java-version: 13
       - uses: gradle/gradle-build-action@v2
         with:
-          dependencies-cache-enabled: true
           arguments: build
