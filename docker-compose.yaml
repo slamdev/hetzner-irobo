@@ -1,5 +1,10 @@
 version: "3.8"
 services:
+  nats:
+    image: nats:2.6.1-alpine3.14
+    ports:
+      - "4222:4222"
+      - "8222:8222"
   cockroachdb:
     image: cockroachdb/cockroach:v21.1.9
     command:
@@ -28,13 +33,14 @@ services:
     profiles: [ "complete" ]
     depends_on:
       - create-db
+      - nats
     environment:
       - HETZNER_IROBO_ROBOT_USERNAME
       - HETZNER_IROBO_ROBOT_PASSWORD
       - HETZNER_IROBO_ROBOT_SSH_KEY
+      - HETZNER_IROBO_ZABBIX_URL
       - HETZNER_IROBO_ZABBIX_USERNAME
       - HETZNER_IROBO_ZABBIX_PASSWORD
-      - ZABBIX_API_URL
       - SPRING_PROFILES_ACTIVE=cloud
     deploy:
       restart_policy:

@@ -21,8 +21,22 @@ spring:
   cloud:
     discovery:
       enabled: false
+    stream:
+      function:
+        definition: hetznerServerConsumer
+      bindings:
+        hetznerServerProducer-out-0:
+          destination: hetzner-server
+        hetznerServerConsumer-in-0:
+          destination: hetzner-server
+          group: ${spring.application.name}
+          consumer:
+            concurrency: 10
   lifecycle:
     timeout-per-shutdown-phase: 1m
+nats:
+  spring:
+    server: nats://localhost:4222
 server:
   error:
     include-stacktrace: always
@@ -45,18 +59,17 @@ management:
     web:
       exposure:
         include: "*"
-zabbix:
-  api:
-    url:
 hetzner-irobo:
+  scheduling:
+    enabled: true
   robot:
     webUrl: https://robot.your-server.de
-    url: https://robot-ws.your-server.de
+    apiUrl: https://robot-ws.your-server.de
     username:
     password:
     ssh-key:
   zabbix:
-    url: ${zabbix.api.url}
+    url:
     username:
     password:
   logs:
@@ -66,9 +79,6 @@ hetzner-irobo:
       config-file: logback-access.xml
   update-interval:
     hetzner-servers-list: 1h
-    zabbix-hosts-list: 10m
-    server-search: 5m
-    server-tags: 1h
 logging:
   level:
     'com.github.slamdev.hetzner.irobo': DEBUG
@@ -83,6 +93,9 @@ spring:
     url: jdbc:postgresql://cockroachdb:26257/irobo
     username: root
     password:
+nats:
+  spring:
+    server: nats://nats:4222
 hetzner-irobo:
   logs:
     appender: JSON

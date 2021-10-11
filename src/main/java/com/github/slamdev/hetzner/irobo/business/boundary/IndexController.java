@@ -2,11 +2,9 @@ package com.github.slamdev.hetzner.irobo.business.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.slamdev.hetzner.irobo.business.control.ServerRepository;
-import com.github.slamdev.hetzner.irobo.business.control.ServerSearchRepository;
 import com.github.slamdev.hetzner.irobo.business.entity.ServerListViewModel;
 import com.github.slamdev.hetzner.irobo.business.entity.ServerModel;
 import com.github.slamdev.hetzner.irobo.integration.AppConfig;
-import com.github.slamdev.hetzner.irobo.integration.Streams;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Sort;
@@ -27,18 +25,17 @@ import java.util.stream.Collectors;
 public class IndexController {
 
     private final ServerRepository serverRepository;
-    private final ServerSearchRepository serverSearchRepository;
     private final ObjectMapper objectMapper;
     private final AppConfig appConfig;
 
     @GetMapping
-    public ModelAndView indexPage(@RequestParam(defaultValue = "serverNumber") String sortField,
+    public ModelAndView indexPage(@RequestParam(defaultValue = "id") String sortField,
                                   @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
                                   @RequestParam(defaultValue = "") String filter) {
         String[] fields;
         switch (sortField) {
             case "externalIp":
-                fields = new String[]{"serverIpV4", "serverIpV6"};
+                fields = new String[]{"ipV4", "ipV6"};
                 break;
             case "internalIp":
                 fields = new String[]{"zabbixIp"};
@@ -51,19 +48,19 @@ public class IndexController {
                 break;
         }
         Sort sort = Sort.by(sortDirection, fields);
-        Iterable<ServerModel> results;
+        List<ServerModel> results;
         if (filter.trim().isEmpty()) {
             results = serverRepository.findAll(sort);
         } else {
-            List<Integer> ids = serverSearchRepository.findAllBySearchDataLike("%" + filter.toLowerCase(Locale.ROOT) + "%");
-            results = serverRepository.findAllByServerNumberIsIn(ids, sort);
+            String searchKeywords = "%" + filter.trim().toLowerCase(Locale.ROOT) + "%";
+            results = serverRepository.findAllBySearchKeywordsLike(searchKeywords, sort);
         }
-        List<ServerListViewModel> servers = Streams.stream(results)
+        List<ServerListViewModel> servers = results.stream()
                 .map(s -> ServerListViewModel.builder()
-                        .serverNumber(s.getServerNumber())
-                        .serverName(s.getServerName())
+                        .id(s.getId())
+                        .name(s.getName())
                         .hostName(s.getZabbixHost())
-                        .externalIp(s.getServerIpV4() == null ? s.getServerIpV6() : s.getServerIpV4())
+                        .externalIp(s.getIpV4() == null ? s.getIpV6() : s.getIpV4())
                         .internalIp(s.getZabbixIp())
                         .product(s.getProduct())
                         .dc(s.getDc())
@@ -83,7 +80,7 @@ public class IndexController {
     }
 
     private String buildHetznerUrl(ServerModel server) {
-        return appConfig.getRobot().getWebUrl() + "/server?text=" + server.getServerNumber();
+        return appConfig.getRobot().getWebUrl() + "/server?text=" + server.getId();
     }
 
     @GetMapping("details")

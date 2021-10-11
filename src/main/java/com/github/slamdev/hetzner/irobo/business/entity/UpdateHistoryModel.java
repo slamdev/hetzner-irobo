@@ -16,9 +16,7 @@ public class UpdateHistoryModel {
 
     @Id
     Long id;
-
     UpdateType updateType;
-
     Instant executedDate;
 
     public enum UpdateType {

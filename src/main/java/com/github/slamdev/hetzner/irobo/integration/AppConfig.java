@@ -1,5 +1,6 @@
 package com.github.slamdev.hetzner.irobo.integration;
 
+import lombok.Builder;
 import lombok.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
@@ -12,6 +13,7 @@ import java.time.Duration;
 
 @Validated
 @Value
+@Builder
 @ConstructorBinding
 @ConfigurationProperties(prefix = "hetzner-irobo")
 public class AppConfig {
@@ -26,12 +28,13 @@ public class AppConfig {
     UpdateInterval updateInterval;
 
     @Value
+    @Builder
     public static class Robot {
         @NotBlank
         String webUrl;
 
         @NotBlank
-        String url;
+        String apiUrl;
 
         @NotBlank
         String username;
@@ -44,6 +47,7 @@ public class AppConfig {
     }
 
     @Value
+    @Builder
     public static class Zabbix {
         @NotBlank
         String url;
@@ -56,17 +60,9 @@ public class AppConfig {
     }
 
     @Value
+    @Builder
     public static class UpdateInterval {
         @NotNull
         Duration hetznerServersList;
-
-        @NotNull
-        Duration zabbixHostsList;
-
-        @NotNull
-        Duration serverSearch;
-
-        @NotNull
-        Duration serverTags;
     }
 }

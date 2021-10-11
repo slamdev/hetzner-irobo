@@ -4,19 +4,15 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.net.InetAddress;
-import java.util.List;
 
 @Value
 @Builder
-public class ServerListViewModel {
+public class HetznerServerMessage {
     int id;
     String name;
-    String hostName;
-    InetAddress externalIp;
-    InetAddress internalIp;
     String product;
     String dc;
-    String hetznerUrl;
-    String zabbixUrl;
-    List<String> tags;
+    InetAddress ipV4;
+    InetAddress ipV6;
+    boolean cancelled;
 }

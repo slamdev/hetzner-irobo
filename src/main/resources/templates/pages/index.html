@@ -36,21 +36,21 @@
             <thead>
             <tr>
                 <th scope="col">
-                    <a th:href="@{/(sortField='serverNumber',sortDirection=${newSortDirection})}" class="btn"
+                    <a th:href="@{/(sortField='id',sortDirection=${newSortDirection})}" class="btn"
                        tabindex="-1" role="button" aria-disabled="true">
                         # <i
                             th:class="${currentSortDirection == 'ASC' ? 'bi bi-sort-down-alt' : 'bi bi-sort-up-alt'}"
                             role="img"
-                            th:if="${currentSortField == 'serverNumber'}"></i>
+                            th:if="${currentSortField == 'id'}"></i>
                     </a>
                 </th>
                 <th scope="col">
-                    <a th:href="@{/(sortField='serverName',sortDirection=${newSortDirection})}" class="btn"
+                    <a th:href="@{/(sortField='name',sortDirection=${newSortDirection})}" class="btn"
                        tabindex="-1" role="button" aria-disabled="true">
                         Server Name <i
                             th:class="${currentSortDirection == 'ASC' ? 'bi bi-sort-down-alt' : 'bi bi-sort-up-alt'}"
                             role="img"
-                            th:if="${currentSortField == 'serverName'}"></i>
+                            th:if="${currentSortField == 'name'}"></i>
                     </a>
                 </th>
                 <th scope="col">
@@ -97,8 +97,15 @@
                               role="img" th:if="${currentSortField == 'dc'}"></i>
                     </a>
                 </th>
-                <th scope="col">Tags</th>
-                <th scope="col">Controls</th>
+                <th scope="col">
+                    <a th:href="@{/(sortField='tags',sortDirection=${newSortDirection})}" class="btn" tabindex="-1"
+                       role="button" aria-disabled="true">
+                        Tags <i
+                            th:class="${currentSortDirection == 'ASC' ? 'bi bi-sort-down-alt' : 'bi bi-sort-up-alt'}"
+                            role="img" th:if="${currentSortField == 'tags'}"></i>
+                    </a>
+                </th>
+                <th scope="col"><span class="btn">Controls</span></th>
             </tr>
             </thead>
             <tbody>
@@ -109,8 +116,8 @@
                 th:attr="data-bs-toggle=${s.zabbixUrl == null ? 'tooltip' : ''}"
             >
                 <!--/*@thymesVar id="s" type="com.github.slamdev.hetzner.irobo.business.entity.ServerListViewModel"*/-->
-                <th scope="row" th:text="${s.serverNumber}"></th>
-                <th th:text="${s.serverName}"></th>
+                <th scope="row" th:text="${s.id}"></th>
+                <th th:text="${s.name}"></th>
                 <td th:text="${s.hostName}"></td>
                 <td th:text="${s.externalIp?.hostAddress}"></td>
                 <td th:text="${s.internalIp?.hostAddress}"></td>
@@ -121,7 +128,7 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a th:href="@{/details(id=${s.serverNumber})}" class="btn btn-outline-info"
+                        <a th:href="@{/details(id=${s.id})}" class="btn btn-outline-info"
                            tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="tooltip" title="Details">
                             <i class="bi bi-card-text" role="img"></i>
                         </a>
