@@ -14,16 +14,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ServerTagsDetector {
-
-    private static final String NO_SSH_TAG = "no-ssh";
 
     final List<Detector> detectors = List.of(
             new Detector("crictl ps", (stdOut, tags) -> {
@@ -59,31 +54,13 @@ public class ServerTagsDetector {
 
     private final SshClientExecutor ssh;
 
-    public List<String> getServerTags(List<InetAddress> ips, String... existingTags) {
-        List<IOException> exceptions = new ArrayList<>();
-        List<String> tags = ips.stream()
-                .map(address -> {
-                    try {
-                        return detectTags(address);
-                    } catch (IOException e) {
-                        exceptions.add(e);
-                        return new ArrayList<String>();
-                    }
-                })
-                .filter(((Predicate<List<String>>) List::isEmpty).negate())
-                .findFirst()
-                .orElseGet(Collections::emptyList);
-        if (tags.isEmpty()) {
-            if (exceptions.size() == ips.size()) {
-                List<String> list = existingTags == null ? Collections.emptyList() : List.of(existingTags);
-                if (list.contains(NO_SSH_TAG)) {
-                    return list;
-                }
-                return Stream.concat(list.stream(), Stream.of(NO_SSH_TAG)).collect(Collectors.toList());
-            }
-            log.warn("failed to detect tags for {}", ips);
+    public List<String> getServerTags(InetAddress ip) {
+        try {
+            return detectTags(ip);
+        } catch (IOException e) {
+            log.error("failed to detect tags for " + ip.getHostAddress(), e);
+            return Collections.emptyList();
         }
-        return tags;
     }
 
     private List<String> detectTags(InetAddress address) throws IOException {

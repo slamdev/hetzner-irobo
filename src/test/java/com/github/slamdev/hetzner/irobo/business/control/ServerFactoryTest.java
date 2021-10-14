@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.net.InetAddress;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,8 +63,7 @@ class ServerFactoryTest {
         when(serverSearchKeywordsBuilder.getSearchKeywords(any())).thenReturn(searchKeywords);
 
         List<String> tags = List.of("1", "2");
-        List<InetAddress> ips = List.of(msg.getIpV4(), msg.getIpV6(), host.getIp());
-        when(serverTagsDetector.getServerTags(ips, (String[]) null)).thenReturn(tags);
+        when(serverTagsDetector.getServerTags(host.getIp())).thenReturn(tags);
 
         ServerModel actual = serverFactory.create(msg);
 

@@ -4,8 +4,6 @@ import com.github.slamdev.hetzner.irobo.integration.SshClientExecutor;
 import com.google.common.net.InetAddresses;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,40 +24,12 @@ class ServerTagsDetectorTest {
     @Mock
     private SshClientExecutor ssh;
 
-    @Captor
-    private ArgumentCaptor<InetAddress> ipCaptor;
-
     @Test
     @SuppressWarnings("UnstableApiUsage")
     void should_detect_tags() throws IOException {
-        List<InetAddress> ips = List.of(
-                InetAddresses.forString("127.0.0.1"),
-                InetAddresses.forString("192.168.0.1")
-        );
-
-        List<String> tags = serverTagsDetector.getServerTags(ips);
-
-        verify(ssh, times(ips.size() * serverTagsDetector.detectors.size()))
-                .exec(ipCaptor.capture(), any());
+        InetAddress ip = InetAddresses.forString("127.0.0.1");
+        List<String> tags = serverTagsDetector.getServerTags(ip);
+        verify(ssh, times(serverTagsDetector.detectors.size())).exec(eq(ip), any());
         assertThat(tags).isNotNull();
-        assertThat(ipCaptor.getAllValues()).containsOnly(ips.toArray(InetAddress[]::new));
-    }
-
-    @Test
-    @SuppressWarnings("UnstableApiUsage")
-    void should_add_no_ssh_tag_on_exception() throws IOException {
-        List<InetAddress> ips = List.of(
-                InetAddresses.forString("127.0.0.1"),
-                InetAddresses.forString("192.168.0.1")
-        );
-        doThrow(IOException.class).when(ssh).exec(any(), any());
-
-        List<String> tags = serverTagsDetector.getServerTags(ips);
-
-        assertThat(tags).containsOnly("no-ssh");
-
-        tags = serverTagsDetector.getServerTags(ips, "tag");
-
-        assertThat(tags).containsOnly("no-ssh", "tag");
     }
 }
