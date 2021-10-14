@@ -49,7 +49,7 @@ public class ServerFactory {
             return Collections.singletonList("no-ip");
         }
         List<String> tags = serverTagsDetector.getServerTags(validIp);
-        if (tags.isEmpty()) {
+        if (tags.isEmpty() && model.getTags() != null) {
             return Arrays.asList(model.getTags());
         }
         return tags;
