@@ -31,7 +31,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-access'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'net.javacrumbs.shedlock:shedlock-spring:4.28.0'
+    implementation 'net.javacrumbs.shedlock:shedlock-spring:4.42.0'
     implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:4.28.0'
     implementation 'com.github.zhanhb:thymeleaf-layout-dialect:2.5.3'
     implementation 'com.github.spotbugs:spotbugs-annotations:4.4.1'
