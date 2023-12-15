@@ -34,7 +34,7 @@ dependencies {
     implementation 'net.javacrumbs.shedlock:shedlock-spring:4.28.0'
     implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:4.28.0'
     implementation 'com.github.zhanhb:thymeleaf-layout-dialect:2.5.3'
-    implementation 'com.github.spotbugs:spotbugs-annotations:4.4.1'
+    implementation 'com.github.spotbugs:spotbugs-annotations:4.8.3'
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'com.google.mug:mug:5.5'
     implementation 'com.hierynomus:sshj:0.31.0'
